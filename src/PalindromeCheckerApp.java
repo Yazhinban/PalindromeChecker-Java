@@ -1,19 +1,46 @@
+/**
+ * MAIN CLASS - UseCase11PalindromeCheckerApp
+ * UC11: Object-Oriented Palindrome Service
+ * This class demonstrates palindrome validation using an object-oriented design.
+ */
 public class PalindromeCheckerApp {
+
     public static void main(String[] args) {
-        String input = "madam";
-        boolean result = isPalindromeRecursive(input, 0, input.length() - 1);
+        // Create an instance of the service class
+        PalindromeService service = new PalindromeService();
+
+        String input = "racecar"; // Example input
+        boolean result = service.checkPalindrome(input);
 
         System.out.println("Input: " + input);
-        System.out.println("Is Palindrome?: " + result);
+        System.out.println("Is Palindrome? " + result);
     }
+}
 
-    private static boolean isPalindromeRecursive(String s, int start, int end) {
-        if (start >= end) {
-            return true;
+/**
+ * Service class that contains palindrome logic.
+ * Demonstrates Encapsulation and Single Responsibility Principle.
+ */
+class PalindromeService {
+
+    /**
+     * Checks whether the input string is a palindrome.
+     * @param input Input string
+     * @return true if palindrome, false otherwise
+     */
+    public boolean checkPalindrome(String input) {
+        if (input == null) return false;
+
+        int start = 0;
+        int end = input.length() - 1;
+
+        while (start < end) {
+            if (input.charAt(start) != input.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
         }
-        if (s.charAt(start) != s.charAt(end)) {
-            return false;
-        }
-        return isPalindromeRecursive(s, start + 1, end - 1);
+        return true;
     }
 }
