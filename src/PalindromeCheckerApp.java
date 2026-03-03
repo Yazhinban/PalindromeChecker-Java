@@ -1,46 +1,66 @@
+import java.util.Stack;
+
 /**
- * MAIN CLASS - UseCase11PalindromeCheckerApp
- * UC11: Object-Oriented Palindrome Service
- * This class demonstrates palindrome validation using an object-oriented design.
+ * UC12: Strategy Pattern for Palindrome Algorithms
+ * Goal: Choose a palindrome algorithm dynamically at runtime.
  */
-public class PalindromeCheckerApp {
 
-    public static void main(String[] args) {
-        // Create an instance of the service class
-        PalindromeService service = new PalindromeService();
+// 1. Define the Strategy Interface
+interface PalindromeStrategy {
+    boolean check(String input);
+}
 
-        String input = "racecar"; // Example input
-        boolean result = service.checkPalindrome(input);
+// 2. Implementation: Stack-based Strategy
+class StackStrategy implements PalindromeStrategy {
+    @Override
+    public boolean check(String input) {
+        if (input == null) return false;
+        String cleaned = input.toLowerCase();
+        Stack<Character> stack = new Stack<>();
 
-        System.out.println("Input: " + input);
-        System.out.println("Is Palindrome? " + result);
+        // Push all characters onto the stack
+        for (char c : cleaned.toCharArray()) {
+            stack.push(c);
+        }
+
+        // Compare stack output (reverse) with original sequence
+        for (char c : cleaned.toCharArray()) {
+            if (c != stack.pop()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
-/**
- * Service class that contains palindrome logic.
- * Demonstrates Encapsulation and Single Responsibility Principle.
- */
-class PalindromeService {
-
-    /**
-     * Checks whether the input string is a palindrome.
-     * @param input Input string
-     * @return true if palindrome, false otherwise
-     */
-    public boolean checkPalindrome(String input) {
+// 3. Implementation: Two-Pointer Strategy (Optimized)
+class TwoPointerStrategy implements PalindromeStrategy {
+    @Override
+    public boolean check(String input) {
         if (input == null) return false;
-
-        int start = 0;
-        int end = input.length() - 1;
-
+        int start = 0, end = input.length() - 1;
         while (start < end) {
-            if (input.charAt(start) != input.charAt(end)) {
-                return false;
-            }
+            if (input.charAt(start) != input.charAt(end)) return false;
             start++;
             end--;
         }
         return true;
+    }
+}
+
+// MAIN APPLICATION CLASS
+public class PalindromeCheckerApp {
+    public static void main(String[] args) {
+        String testInput = "Level";
+
+        // Inject Strategy at runtime
+        PalindromeStrategy strategy = new StackStrategy();
+
+        System.out.println("Input: " + testInput);
+        System.out.println("Using StackStrategy: " + strategy.check(testInput));
+
+        // Switch strategy dynamically
+        strategy = new TwoPointerStrategy();
+        System.out.println("Using TwoPointerStrategy: " + strategy.check(testInput));
     }
 }
